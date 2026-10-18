@@ -26,7 +26,7 @@ struct ContentView: View {
                             VStack(alignment: .leading) {
                                 Text(child.name).font(.headline)
                                 let age = AgeCalculator.calculateAge(from: child.birthDate)
-                                Text("\(age.years) ăm, \(age.months) tháng, \(age.days) ngày")
+                                Text("\(age.years) năm, \(age.months) tháng, \(age.days) ngày")
                                     .font(.subheadline)
                                     .foregroundColor(.secondary)
                             }
