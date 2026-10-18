@@ -16,7 +16,11 @@ targets:
     type: application
     platform: iOS
     sources:
-      - path: Sources
+  - path: Sources
+    excludes:
+      - "Assets.xcassets"
+  - path: Sources/Assets.xcassets
+    buildPhase: resources
     settings:
       base:
         INFOPLIST_FILE: Sources/Info.plist
