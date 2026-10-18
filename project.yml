@@ -22,4 +22,4 @@ targets:
       base:
         INFOPLIST_FILE: Sources/Info.plist
         PRODUCT_BUNDLE_IDENTIFIER: com.yourname.AgeTracker
-        INFOPLIST_KEY_CFBundleDisplayName: "Coca"
+        
