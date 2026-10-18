@@ -31,14 +31,22 @@ jobs:
             CODE_SIGN_IDENTITY=""
 
       - name: Package into Unsigned IPA
-        run: |
-          mkdir -p $RUNNER_TEMP/Payload
-          cp -r $RUNNER_TEMP/AgeTracker.xcarchive/Products/Applications/AgeTracker.app $RUNNER_TEMP/Payload/
-          cd $RUNNER_TEMP
-          zip -r AgeTracker-unsigned.ipa Payload
+          run: |
+            set -euxo pipefail
+            APP_PATH="${{ runner.temp }}/AgeTracker.xcarchive/Products/Applications/AgeTracker.app"
+            echo "=== Kiểm tra .app có tồn tại không ==="
+            ls -la "$(dirname "$APP_PATH")"
+            test -d "$APP_PATH" || (echo "LỖI: Không tìm thấy $APP_PATH" && exit 1)
+            echo "=== Đóng gói IPA ==="
+            mkdir -p Payload dist
+            cp -R "$APP_PATH" Payload/
+            zip -r dist/AgeTracker-unsigned.ipa Payload
+            echo "=== Kiểm tra file IPA đã tạo ==="
+            ls -la dist/
 
       - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: AgeTracker-unsigned-ipa
-          path: $RUNNER_TEMP/AgeTracker-unsigned.ipa
+          path: dist/AgeTracker-unsigned.ipa
+          if-no-files-found: error
