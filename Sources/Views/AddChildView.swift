@@ -60,4 +60,5 @@ struct AddChildView: View {
             }
         }
     }
+    .environment(\.locale, Locale(identifier: "vi_VN")) 
 }
