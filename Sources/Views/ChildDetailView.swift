@@ -21,7 +21,7 @@ struct ChildDetailView: View {
 
             let age = AgeCalculator.calculateAge(from: child.birthDate, to: now)
             VStack(spacing: 8) {
-                Text("\(age.years) tuổi").font(.title)
+                Text("\(age.years) năm").font(.title)
                 Text("\(age.months) tháng, \(age.days) ngày").font(.title2).foregroundColor(.secondary)
             }
             Spacer()
