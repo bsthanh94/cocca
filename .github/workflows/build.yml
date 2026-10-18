@@ -1,1 +1,44 @@
+name: Build Unsigned IPA
 
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build Archive (No Code Sign)
+        run: |
+          xcodebuild clean archive \
+            -project AgeTracker.xcodeproj \
+            -scheme AgeTracker \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath $RUNNER_TEMP/AgeTracker.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY=""
+
+      - name: Package into Unsigned IPA
+        run: |
+          mkdir -p $RUNNER_TEMP/Payload
+          cp -r $RUNNER_TEMP/AgeTracker.xcarchive/Products/Applications/AgeTracker.app $RUNNER_TEMP/Payload/
+          cd $RUNNER_TEMP
+          zip -r AgeTracker-unsigned.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AgeTracker-unsigned-ipa
+          path: $RUNNER_TEMP/AgeTracker-unsigned.ipa
